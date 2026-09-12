@@ -141,3 +141,10 @@
 @media (max-width:760px) {
   :root[data-theme="detective"] .home-hero.hero-night-mode .hero-hero-copy { top:30px; bottom:auto; }
 }
+
+/* Keep the active banner visible on the first paint; enable crossfades after mount. */
+.home-hero .hero-image { transition:none; }
+.site-shell.is-mounted .home-hero .hero-image { transition:opacity .65s ease; }
+
+/* Keep the top navigation visible while the page content scrolls. */
+.site-header { position:sticky; top:0; z-index:30; }
