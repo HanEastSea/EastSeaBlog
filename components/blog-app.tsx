@@ -80,9 +80,12 @@ function AdminView({ posts, onSave, onReset }: { posts: BlogPost[]; onSave: (pos
 }
 
 export default function BlogApp({ initialView = "home", initialTheme = "magician" }: { initialView?: View; initialTheme?: Theme }) {
-  const [theme, setTheme] = useState<Theme>(initialTheme); const [menuOpen, setMenuOpen] = useState(false); const [view] = useState<View>(initialView); const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null); const [posts, setPosts] = useState<BlogPost[]>(blogPosts);
+  const pathname = usePathname();
+  const view: View = pathname === "/" ? "home" : pathname === "/blog" ? "blog" : pathname === "/categories" ? "categories" : pathname === "/calendar" ? "calendar" : pathname === "/admin" ? "admin" : initialView;
+  const [theme, setTheme] = useState<Theme>(initialTheme); const [menuOpen, setMenuOpen] = useState(false); const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null); const [posts, setPosts] = useState<BlogPost[]>(blogPosts);
   useEffect(() => { const storedPosts = window.localStorage.getItem("east-sea-posts"); if (storedPosts) { try { setPosts(JSON.parse(storedPosts)); } catch { /* keep examples */ } } }, []);
   useEffect(() => { document.documentElement.dataset.theme = theme; window.localStorage.setItem("east-sea-theme", theme); document.cookie = `east-sea-theme=${theme}; path=/; max-age=31536000; samesite=lax`; }, [theme]);
+  useEffect(() => { setSelectedPost(null); setMenuOpen(false); }, [pathname]);
   const orderedPosts = useMemo(() => [...posts].sort((a, b) => Number(Boolean(b.pinned)) - Number(Boolean(a.pinned)) || b.date.localeCompare(a.date)), [posts]);
   const openPost = (post: BlogPost) => { setSelectedPost(post); setMenuOpen(false); };
   const savePost = (post: BlogPost) => { const next = posts.some((item) => item.id === post.id) ? posts.map((item) => item.id === post.id ? post : item) : [post, ...posts]; setPosts(next); window.localStorage.setItem("east-sea-posts", JSON.stringify(next)); };
