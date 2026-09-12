@@ -190,3 +190,140 @@
 @media (max-width:760px) {
   .main-nav { background:var(--header); border-bottom-color:var(--header-border); }
 }
+
+/* The two former hero banners now become the page-level theme backgrounds. */
+.site-shell {
+  background-repeat:no-repeat;
+  background-position:center top,center top;
+  background-size:100% 760px,100% auto;
+}
+
+:root[data-theme="detective"] .site-shell {
+  background-image:linear-gradient(180deg,rgb(7 26 53 / 4%) 0%,rgb(7 26 53 / 78%) 82%,var(--bg) 100%),url("/hero-archive.png");
+}
+
+:root[data-theme="magician"] .site-shell {
+  background-image:linear-gradient(180deg,rgb(239 244 250 / 0%) 0%,rgb(239 244 250 / 70%) 82%,var(--bg) 100%),url("/hero-archive-day.png");
+}
+
+@media (max-width:760px) {
+  .site-shell { background-size:100% 560px,auto 560px; }
+}
+
+/* Keep the theme artwork fixed to the viewport and let it fill the area behind the page. */
+.site-shell {
+  position:relative;
+  isolation:isolate;
+  background-image:none;
+  background-attachment:initial;
+}
+
+.site-shell::before {
+  position:fixed;
+  z-index:-1;
+  inset:0;
+  content:"";
+  pointer-events:none;
+  background-position:center top;
+  background-repeat:no-repeat;
+  background-size:cover;
+}
+
+:root[data-theme="detective"] .site-shell::before {
+  background-image:linear-gradient(180deg,rgb(7 26 53 / 8%) 0%,rgb(7 26 53 / 42%) 64%,rgb(7 26 53 / 94%) 100%),url("/hero-archive.png");
+}
+
+:root[data-theme="magician"] .site-shell::before {
+  background-image:linear-gradient(180deg,rgb(239 244 250 / 4%) 0%,rgb(239 244 250 / 28%) 64%,rgb(239 244 250 / 94%) 100%),url("/hero-archive-day.png");
+}
+
+/* Clear the earlier scrolling background declarations; the fixed layer above is the only artwork layer. */
+:root[data-theme="detective"] .site-shell,
+:root[data-theme="magician"] .site-shell {
+  background-image:none;
+  background-position:initial;
+  background-size:auto;
+}
+
+/* Preserve the artwork's full aspect ratio instead of cropping it with cover. */
+.site-shell::before {
+  background-color:var(--bg);
+  background-size:100% 100%,100% auto;
+}
+
+/* Theme-aware translucent content surfaces and readable text tokens. */
+:root {
+  --surface:rgb(9 31 59 / 84%);
+  --surface-soft:rgb(23 53 89 / 78%);
+  --text:#edf4ff;
+  --muted:#b8c8df;
+  --line:rgb(151 180 221 / 28%);
+  --line-strong:rgb(151 180 221 / 46%);
+  --paper:rgb(9 31 59 / 90%);
+  --accent-soft:rgb(215 52 72 / 20%);
+  --blue-soft:rgb(72 127 198 / 20%);
+}
+
+:root[data-theme="magician"] {
+  --surface:rgb(255 255 255 / 84%);
+  --surface-soft:rgb(232 238 246 / 78%);
+  --text:#102a4c;
+  --muted:#647792;
+  --line:rgb(72 103 145 / 22%);
+  --line-strong:rgb(72 103 145 / 38%);
+  --paper:rgb(255 255 255 / 88%);
+  --accent-soft:rgb(21 85 159 / 13%);
+  --blue-soft:rgb(31 97 172 / 12%);
+}
+
+:where(.post-card,.profile-card,.sidebar-panel,.mini-calendar,.calendar-card,.calendar-aside,.category-card,.search-bar,.admin-toolbar,.admin-list,.auth-status,.editor-modal) {
+  background:var(--surface);
+}
+
+:where(.hot-categories a,.cloud-tags span) { background:var(--surface-soft); }
+
+/* Pull the first content row closer to the fixed navigation. */
+.site-main.home-main { padding-top:12px; }
+.home-content-grid { margin-top:0; }
+
+/* Fit the complete artwork inside the fixed viewport without stretching or cropping it. */
+.site-shell::before {
+  top:82px;
+  background-position:center top,center center;
+  background-size:100% 100%,auto 100%;
+}
+
+@media (max-width:760px) {
+  .site-shell::before { top:69px; }
+}
+
+/* Let a little more of the fixed artwork show through the content surfaces. */
+:root {
+  --surface:rgb(9 31 59 / 74%);
+  --surface-soft:rgb(23 53 89 / 68%);
+  --paper:rgb(9 31 59 / 80%);
+}
+
+:root[data-theme="magician"] {
+  --surface:rgb(255 255 255 / 74%);
+  --surface-soft:rgb(232 238 246 / 68%);
+  --paper:rgb(255 255 255 / 80%);
+}
+
+/* Fill ultra-wide side gaps with a softened copy while keeping the main artwork uncropped. */
+.site-shell::after {
+  position:fixed;
+  z-index:-2;
+  inset:0;
+  content:"";
+  pointer-events:none;
+  background-position:center;
+  background-repeat:no-repeat;
+  background-size:cover;
+  filter:blur(18px) saturate(.9);
+  opacity:.48;
+  transform:scale(1.06);
+}
+
+:root[data-theme="detective"] .site-shell::after { background-image:url("/hero-archive.png"); }
+:root[data-theme="magician"] .site-shell::after { background-image:url("/hero-archive-day.png"); }
