@@ -12,6 +12,7 @@ export type BlogPost = {
   pinned?: boolean;
   tags: string[];
   content: string[];
+  markdown?: string;
   accent: "crimson" | "sapphire" | "silver";
 };
 

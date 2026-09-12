@@ -1,5 +1,13 @@
 {
   "version": "7",
   "dialect": "sqlite",
-  "entries": []
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1789206008818,
+      "tag": "0000_spicy_the_hood",
+      "breakpoints": true
+    }
+  ]
 }
