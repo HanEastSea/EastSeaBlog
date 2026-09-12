@@ -148,3 +148,45 @@
 
 /* Keep the top navigation visible while the page content scrolls. */
 .site-header { position:sticky; top:0; z-index:30; }
+
+/* Theme the header itself so the chrome follows the detective / magician mood. */
+:root {
+  --header-text:#fff;
+  --header-muted:rgb(255 255 255 / 82%);
+  --header-subtle:rgb(255 255 255 / 60%);
+  --header-border:rgb(142 172 216 / 24%);
+  --header-hover:rgb(255 255 255 / 7%);
+  --header-control:rgb(255 255 255 / 7%);
+}
+
+:root[data-theme="magician"] {
+  --header:rgb(247 251 255 / 97%);
+  --header-text:#12345c;
+  --header-muted:rgb(18 52 92 / 80%);
+  --header-subtle:rgb(18 52 92 / 60%);
+  --header-border:rgb(54 95 145 / 24%);
+  --header-hover:rgb(21 85 159 / 10%);
+  --header-control:rgb(21 85 159 / 7%);
+}
+
+.site-header { color:var(--header-text); border-bottom-color:var(--header-border); box-shadow:0 6px 30px rgb(20 60 110 / 12%); }
+.brand-mark { border-color:var(--header-border); color:var(--header-text); }
+.brand-mark i { border-color:var(--header); }
+.brand-copy strong { color:var(--header-text); }
+.brand-copy small { color:var(--header-subtle); }
+.nav-link { color:var(--header-muted); }
+.nav-link:hover { color:var(--header-text); background:var(--header-hover); }
+.nav-link.is-active { color:var(--header-text); background:var(--header-hover); }
+.nav-link:first-child:not(.is-active) { color:var(--header-muted); background:transparent; }
+.nav-link:first-child:not(.is-active):hover { color:var(--header-text); background:var(--header-hover); }
+.header-search { border-color:var(--header-border); color:var(--header-subtle); background:var(--header-control); }
+.login-link { color:var(--header-muted); }
+.theme-toggle { border-color:var(--header-border); color:var(--header-text); background:var(--header-control); }
+.theme-toggle-copy small { color:var(--header-subtle); }
+.theme-toggle-copy strong { color:var(--header-text); }
+.theme-switch { background:var(--header-text); }
+.mobile-menu { border-color:var(--header-border); color:var(--header-text); }
+
+@media (max-width:760px) {
+  .main-nav { background:var(--header); border-bottom-color:var(--header-border); }
+}
