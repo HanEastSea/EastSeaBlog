@@ -348,6 +348,34 @@
 .site-footer { width:100%; max-width:none; }
 .article-tags { font-size:13px; }
 .site-shell { overflow-x:clip; }
+.feed-label > span:first-child { font-size:18px; font-weight:600; letter-spacing:0; }
+.header-search input { width:100%; min-width:0; outline:0; border:0; color:inherit; background:transparent; font:inherit; }
+.header-search input::placeholder { color:inherit; opacity:.78; }
+.search-clear { display:grid; flex:0 0 auto; place-items:center; padding:0; border:0; color:inherit; background:transparent; cursor:pointer; }
+.search-clear:hover { color:var(--accent); }
+.search-summary { margin:8px 0 0; color:var(--muted); font-size:14px; }
+@media (min-width:761px) { .header-search { display:flex; } }
+.search-empty-card { display:flex; align-items:stretch; width:100%; height:320px; min-height:320px; overflow:hidden; border:1px solid var(--line-strong); border-radius:8px; background:var(--surface); box-shadow:0 12px 28px rgb(6 21 45 / 10%); }
+.home-feed:has(.search-empty-card) { display:flex; flex-direction:column; min-height:calc(100vh - 69px - 64px); }
+.home-feed:has(.search-empty-card) .search-empty-card { margin-top:auto; margin-bottom:auto; }
+.search-empty-copy { display:grid; flex:1; align-content:center; justify-items:center; gap:9px; padding:24px 28px; text-align:center; }
+.search-empty-copy strong { color:var(--text); font-family:Georgia,"Songti SC",serif; font-size:22px; font-weight:500; }
+.search-empty-copy small { color:var(--muted); font-size:13px; }
+.search-empty-magician { display:block; padding:0; }
+.search-letter { position:relative; display:grid; align-content:center; justify-items:center; width:100%; height:100%; min-height:0; margin:0; padding:28px 42px; box-sizing:border-box; border:0; color:#26324a; background:#fffdf4; box-shadow:none; }
+.search-letter::before { position:absolute; inset:14px; border:1px solid rgb(160 123 95 / 32%); content:""; pointer-events:none; }
+.search-letter::after { position:absolute; top:30px; right:34px; width:31px; height:31px; border:3px solid rgb(154 38 51 / 38%); border-radius:50%; content:""; background:#d73448; box-shadow:0 2px 0 rgb(109 28 39 / 16%); transform:rotate(-12deg); }
+.search-letter h3 { margin:0 0 26px; color:#8c2d3b; font-family:Georgia,"Songti SC",serif; font-size:28px; font-weight:600; letter-spacing:.08em; }
+.search-letter strong { color:#26324a; font-family:Georgia,"Songti SC",serif; font-size:22px; font-weight:600; }
+.search-letter small { margin-top:11px; color:#5d6a7d; font-size:14px; }
+.search-letter img { position:absolute; right:24px; bottom:18px; width:165px; height:auto; object-fit:contain; }
+.search-detective-art { display:flex; flex:0 0 46%; align-items:end; justify-content:center; height:100%; overflow:hidden; background:linear-gradient(180deg,var(--surface-soft),var(--surface)); }
+.search-detective-art img { display:block; width:100%; height:100%; padding:10px 8px 0; box-sizing:border-box; object-fit:contain; object-position:center bottom; filter:drop-shadow(0 8px 10px rgb(6 21 45 / 18%)); }
+:root[data-theme="detective"] .search-empty-card { border-color:rgb(171 198 235 / 48%); background:linear-gradient(180deg,rgb(12 35 70 / 88%),rgb(7 26 53 / 92%)); }
+:root[data-theme="detective"] .search-detective-art { background:linear-gradient(180deg,#203f70,#0d2549); }
+:root[data-theme="detective"] .search-empty-copy strong { color:#f1f5ff; }
+:root[data-theme="detective"] .search-empty-copy small { color:#b8c9e1; }
+@media (max-width:760px) { .home-feed:has(.search-empty-card) { min-height:0; }.search-empty-card { height:290px; min-height:290px; }.search-empty-detective { flex-direction:column; }.search-detective-art { flex:0 0 48%; width:100%; }.search-detective-art img { padding:10px 2px 0; }.search-empty-copy { padding:20px 12px; }.search-empty-copy strong { font-size:19px; }.search-letter { padding:24px 22px; }.search-letter h3 { margin-bottom:20px; font-size:24px; }.search-letter img { right:16px; bottom:13px; width:135px; } }
 .article-meta > span { display:inline-flex; align-items:center; }
 .article-meta .article-author { margin-left:0; }
 .article-meta .article-reading svg { flex:0 0 auto; }
