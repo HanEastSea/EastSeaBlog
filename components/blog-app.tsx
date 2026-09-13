@@ -6,7 +6,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowLeft, ArrowUpRight, CalendarDays, Check, ChevronLeft,
   ChevronRight, CircleUserRound, Clock3, FilePenLine, Layers3,
-  Menu, Plus, Search, Sparkles, UploadCloud, X, Zap, Pin, Trash2,
+  Menu, Plus, Search, Sparkles, UploadCloud, X, Pin, Trash2,
 } from "lucide-react";
 import { BlogPost, blogPosts, categories, formatDate, formatShortDate } from "@/lib/blog-data";
 import { renderMarkdown } from "@/lib/markdown";
@@ -71,7 +71,7 @@ function CalendarView({ posts, onOpen }: { posts: BlogPost[]; onOpen: (post: Blo
 
 function ArticleView({ post, onBack, theme }: { post: BlogPost; onBack: () => void; theme: Theme }) {
   const markdown = post.markdown ?? post.content.join("\n\n");
-  return <section className="article-view"><button className="back-link" onClick={onBack}><ArrowLeft size={16} /> 返回文章列表</button><div className="article-header"><span className="section-kicker">CASE {post.id.replace("case-", "")} / {post.type.toUpperCase()}</span><h1>{post.title}</h1><p>{post.excerpt}</p><div className="article-meta"><span>{formatDate(post.date)}</span><span className="meta-divider" /><span><Clock3 size={14} /> {post.readTime}</span><span className="article-author">东海 · 作者</span></div></div><div className="article-art" style={{ backgroundImage: `url('${theme === "detective" ? "/hero-archive.png" : "/hero-archive-day.png"}')` }}><span>FIELD NOTE / {post.category}</span><strong>{post.type === "技术" ? "♠" : post.pinned ? "🎀" : "✦"}</strong><small>ARCHIVE / EAST SEA</small></div><div className="article-body markdown-body" dangerouslySetInnerHTML={{ __html: renderMarkdown(markdown) }} /><div className="article-note"><Zap size={16} /><div><strong>档案备注</strong><span>这是一条来自写作者的现场记录。</span></div></div><div className="article-tags">{post.tags.map((tag) => <span key={tag}>#{tag}</span>)}</div></section>;
+  return <section className="article-view"><button className="back-link" onClick={onBack}><ArrowLeft size={16} /> 返回文章列表</button><div className="article-header"><span className="section-kicker">CASE {post.id.replace("case-", "")} / {post.type.toUpperCase()}</span><h1>{post.title}</h1><p>{post.excerpt}</p><div className="article-meta"><span>{formatDate(post.date)}</span><span className="meta-divider" /><span><Clock3 size={14} /> {post.readTime}</span><span className="article-author">东海 · 作者</span></div></div><div className="article-body markdown-body" dangerouslySetInnerHTML={{ __html: renderMarkdown(markdown) }} /><div className="article-tags">{post.tags.map((tag) => <span key={tag}>#{tag}</span>)}</div><button className="article-top-button" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} aria-label="返回顶部" title="返回顶部"><span>{theme === "magician" ? "♠" : "🎀"}</span></button></section>;
 }
 
 function AdminView({ posts, onSave, onDelete, onTogglePinned }: { posts: BlogPost[]; onSave: (post: BlogPost) => Promise<void>; onDelete: (post: BlogPost) => Promise<void>; onTogglePinned: (post: BlogPost) => Promise<void> }) {
