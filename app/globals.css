@@ -347,3 +347,30 @@
 .article-body p:last-child { margin-bottom:0; }
 .site-footer { width:100%; max-width:none; }
 .article-tags { font-size:13px; }
+.site-shell { overflow-x:clip; }
+.article-meta > span { display:inline-flex; align-items:center; }
+.article-meta .article-author { margin-left:0; }
+.article-meta .article-reading svg { flex:0 0 auto; }
+.article-meta { margin-top:13px; margin-bottom:12px; }
+.article-view .back-link { gap:8px; font-size:15px; font-weight:600; }
+.article-view .back-link svg { width:20px; height:20px; stroke-width:2.4; }
+:root[data-theme="magician"] .article-view .article-header > p { color:#385572; text-shadow:0 1px 2px rgb(255 255 255 / 78%); }
+:root[data-theme="magician"] .article-view .article-meta { color:#304d6c; text-shadow:0 1px 2px rgb(255 255 255 / 82%); }
+:root[data-theme="magician"] .article-view .article-tags { color:#2f4c6b; text-shadow:0 1px 2px rgb(255 255 255 / 82%); }
+:root[data-theme="magician"] .article-view .back-link { text-shadow:0 1px 2px rgb(255 255 255 / 82%); }
+:root[data-theme="magician"] .article-view .article-body p,
+:root[data-theme="magician"] .article-view .markdown-body li { text-shadow:0 1px 1px rgb(255 255 255 / 52%); }
+.site-footer { color:rgb(238 244 255 / 82%); }
+:root[data-theme="detective"] .site-footer { color:rgb(238 244 255 / 82%); }
+:root[data-theme="magician"] .site-footer { color:#36536f; text-shadow:0 1px 2px rgb(255 255 255 / 78%); }
+:root[data-theme="magician"] .site-footer .footer-links a { color:#15559f; }
+.site-header { position:sticky; top:0; z-index:30; }
+.article-tags { color:#304b68; font-weight:500; }
+.article-reading { gap:6px; }
+.site-footer { border-top-color:rgb(112 140 178 / 62%); }
+:root[data-theme="detective"] .article-tags { color:#dbe6f6; }
+:root[data-theme="detective"] .site-footer { border-top-color:rgb(171 198 235 / 62%); }
+:root[data-theme="magician"] .article-tags { color:#244665; }
+:root[data-theme="magician"] .site-footer { border-top-color:rgb(73 111 153 / 58%); }
+.article-top-button { right:clamp(10px,2.5vw,32px); bottom:clamp(-70px,-7vw,-40px); }
+@media (max-width:760px) { .article-top-button { right:clamp(10px,3vw,24px); bottom:clamp(-46px,-8vw,-28px); } }
