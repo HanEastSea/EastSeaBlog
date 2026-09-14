@@ -25,6 +25,7 @@ export function rowToPost(row: typeof posts.$inferSelect): BlogPost {
     readTime: row.readTime,
     pinned: Boolean(row.pinned),
     tags: parseTags(row.tagsJson),
+    coverImage: row.coverImage || null,
     markdown,
     content: markdown.split(/\n\s*\n/).map((part) => part.trim()).filter(Boolean),
     accent: row.accent === "crimson" || row.accent === "silver" ? row.accent : "sapphire",
@@ -44,6 +45,7 @@ function postToInsert(post: BlogPost) {
     readTime: post.readTime,
     pinned: Boolean(post.pinned),
     tagsJson: JSON.stringify(post.tags),
+    coverImage: post.coverImage ?? null,
     markdown,
     accent: post.accent,
   };

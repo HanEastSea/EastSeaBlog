@@ -6,7 +6,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowLeft, ArrowUpRight, CalendarDays, Check, ChevronLeft,
   ChevronRight, CircleUserRound, Clock3, FilePenLine, Layers3,
-  Menu, Plus, Search, Sparkles, UploadCloud, X, Pin, Trash2,
+  ImagePlus, Menu, Plus, Search, Sparkles, UploadCloud, X, Pin, Trash2,
 } from "lucide-react";
 import { BlogPost, blogPosts, categories, formatDate, formatShortDate } from "@/lib/blog-data";
 import { renderMarkdown } from "@/lib/markdown";
@@ -32,7 +32,9 @@ function SiteHeader({ theme, onToggle, menuOpen, onMenu, searchQuery, onSearchCh
 }
 
 function PostCard({ post, featured = false, onOpen }: { post: BlogPost; featured?: boolean; onOpen?: (post: BlogPost) => void }) {
-  return <article className={`post-card ${featured ? "post-card-featured" : ""} accent-${post.accent}`}><div className={`post-thumb ${featured ? "has-hero" : ""}`} style={featured ? { backgroundImage: "url('/hero-archive.png')" } : undefined}><span className="thumb-case">CASE {post.id.replace("case-", "")}</span><span className="thumb-symbol">{post.type === "技术" ? "♠" : post.pinned ? "🎀" : "✦"}</span><span className="thumb-stamp">{post.pinned ? "置顶" : post.type}</span></div><div className="post-card-content"><div className="post-card-topline"><span className="eyebrow"><span className="eyebrow-dot" />{post.category}</span>{post.pinned && <span className="pin-badge">置顶档案</span>}</div><h3>{post.title}</h3><p>{post.excerpt}</p><div className="tag-list">{post.tags.slice(0, 4).map((tag) => <span key={tag}>#{tag}</span>)}</div><div className="post-card-footer"><div className="post-meta"><span><Clock3 size={13} /> {formatShortDate(post.date)}</span><span><span className="mini-eye">◉</span> {post.readTime}</span></div><button className="read-more" onClick={() => onOpen?.(post)}>阅读全文 <ArrowUpRight size={15} /></button></div></div></article>;
+  const thumbClass = `post-thumb ${featured ? "has-hero" : ""} ${post.coverImage ? "has-cover" : ""}`;
+  const thumbStyle = post.coverImage ? { backgroundImage: `url("${post.coverImage}")` } : featured ? { backgroundImage: "url('/hero-archive.png')" } : undefined;
+  return <article className={`post-card ${featured ? "post-card-featured" : ""} accent-${post.accent}`}><div className={thumbClass} style={thumbStyle}><span className="thumb-case">CASE {post.id.replace("case-", "")}</span><span className="thumb-symbol">{post.type === "技术" ? "♠" : post.pinned ? "🎀" : "✦"}</span><span className="thumb-stamp">{post.pinned ? "置顶" : post.type}</span></div><div className="post-card-content"><div className="post-card-topline"><span className="eyebrow"><span className="eyebrow-dot" />{post.category}</span>{post.pinned && <span className="pin-badge">置顶档案</span>}</div><h3>{post.title}</h3><p>{post.excerpt}</p><div className="tag-list">{post.tags.slice(0, 4).map((tag) => <span key={tag}>#{tag}</span>)}</div><div className="post-card-footer"><div className="post-meta"><span><Clock3 size={13} /> {formatShortDate(post.date)}</span><span><span className="mini-eye">◉</span> {post.readTime}</span></div><button className="read-more" onClick={() => onOpen?.(post)}>阅读全文 <ArrowUpRight size={15} /></button></div></div></article>;
 }
 
 function MiniCalendar({ posts, onOpen }: { posts: BlogPost[]; onOpen: (post: BlogPost) => void }) {
@@ -41,13 +43,16 @@ function MiniCalendar({ posts, onOpen }: { posts: BlogPost[]; onOpen: (post: Blo
   return <div className="mini-calendar"><div className="mini-calendar-head"><strong>柯南日历</strong><span>2026 年 9 月</span><div><ChevronLeft size={14} /><ChevronRight size={14} /></div></div><div className="mini-week">{["一", "二", "三", "四", "五", "六", "日"].map((day) => <span key={day}>{day}</span>)}</div><div className="mini-days">{days.map((day) => { const post = postDays.get(day); return <button key={day} className={post ? "has-note" : ""} onClick={() => post && onOpen(post)} disabled={!post}>{day}{post && <i />}</button>; })}</div></div>;
 }
 
-function ProfileCard() {
-  return <div className="profile-card"><div className="profile-head"><div className="profile-avatar">东</div><div><span>ABOUT THE AUTHOR</span><strong>东海</strong><small>记录生活的观察员</small></div><span className="profile-bow">🎀</span></div><p>“如果你的话，一定能找到真相的。”</p><div className="profile-stats"><span><strong>03</strong>文章</span><span><strong>03</strong>分类</span><span><strong>09</strong>标签</span></div></div>;
+function ProfileCard({ posts }: { posts: BlogPost[] }) {
+  const categoryCount = new Set(posts.map((post) => post.category)).size;
+  const tagCount = new Set(posts.flatMap((post) => post.tags)).size;
+  return <div className="profile-card"><div className="profile-head"><div className="profile-avatar">东</div><div><span>ABOUT THE AUTHOR</span><strong>东海</strong><small>记录生活的观察员</small></div><span className="profile-bow">🎀</span></div><p>“如果你的话，一定能找到真相的。”</p><div className="profile-stats"><span><strong>{posts.length.toString().padStart(2, "0")}</strong>文章</span><span><strong>{categoryCount.toString().padStart(2, "0")}</strong>分类</span><span><strong>{tagCount.toString().padStart(2, "0")}</strong>标签</span></div></div>;
 }
 
 function Sidebar({ posts, onOpen }: { posts: BlogPost[]; onOpen: (post: BlogPost) => void }) {
   const categoryItems = categories.map((category) => ({ ...category, count: posts.filter((post) => post.category === category.name).length }));
-  return <aside className="right-sidebar"><ProfileCard /><div className="sidebar-panel"><div className="sidebar-title"><strong>热门分类</strong><span>INDEX</span></div><div className="hot-categories">{categoryItems.map((category) => <a key={category.name} href={`/categories#${category.name}`}><span>{category.symbol}</span><strong>{category.name}</strong><small>{category.count}</small></a>)}</div></div><div className="sidebar-panel"><div className="sidebar-title"><strong>最新标签</strong><span>TAG CLOUD</span></div><div className="cloud-tags">{["日常", "技术", "随笔", "架构", "夜晚", "慢生活", "Next.js", "记录"].map((tag) => <span key={tag}>#{tag}</span>)}</div></div><MiniCalendar posts={posts} onOpen={onOpen} /></aside>;
+  const tagItems = Array.from(new Set(posts.flatMap((post) => post.tags)));
+  return <aside className="right-sidebar"><ProfileCard posts={posts} /><div className="sidebar-panel"><div className="sidebar-title"><strong>热门分类</strong><span>INDEX</span></div><div className="hot-categories">{categoryItems.map((category) => <a key={category.name} href={`/categories#${category.name}`}><span>{category.symbol}</span><strong>{category.name}</strong><small>{category.count}</small></a>)}</div></div><div className="sidebar-panel"><div className="sidebar-title"><strong>最新标签</strong><span>TAG CLOUD</span></div><div className="cloud-tags">{tagItems.length ? tagItems.map((tag) => <span key={tag}>#{tag}</span>) : <span>暂无标签</span>}</div></div><MiniCalendar posts={posts} onOpen={onOpen} /></aside>;
 }
 
 function SearchEmptyState({ theme }: { theme: Theme }) {
@@ -82,16 +87,19 @@ function AdminView({ posts, onSave, onDelete, onTogglePinned }: { posts: BlogPos
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("日常生活");
   const [tags, setTags] = useState("");
+  const [coverImage, setCoverImage] = useState<string | null>(null);
   const [type, setType] = useState<"生活" | "技术">("生活");
   const [body, setBody] = useState("");
   const [saved, setSaved] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [uploadingCover, setUploadingCover] = useState(false);
   const imageInputRef = useRef<HTMLInputElement>(null);
+  const coverInputRef = useRef<HTMLInputElement>(null);
   const openEditor = (post?: BlogPost) => {
     const target = post ?? { id: `draft-${crypto.randomUUID()}`, slug: "", title: "", excerpt: "", category: "日常生活", type: "生活" as const, date: new Date().toISOString().slice(0, 10), readTime: "5 分钟", tags: [], accent: "crimson" as const, content: [], markdown: "" };
-    setEditing(target); setTitle(target.title); setCategory(target.category); setTags(target.tags.join(", ")); setType(target.type); setBody(target.markdown ?? target.content.join("\n\n")); setSaved(false); setError("");
+    setEditing(target); setTitle(target.title); setCategory(target.category); setTags(target.tags.join(", ")); setCoverImage(target.coverImage ?? null); setType(target.type); setBody(target.markdown ?? target.content.join("\n\n")); setSaved(false); setError("");
   };
   const save = async () => {
     if (!title.trim() || !body.trim() || !editing) { setError("标题和 Markdown 正文不能为空。"); return; }
@@ -99,7 +107,7 @@ function AdminView({ posts, onSave, onDelete, onTogglePinned }: { posts: BlogPos
     try {
       const generatedExcerpt = body.trim().split(/\n\s*\n/).map((block) => block.replace(/^#{1,6}\s+/gm, "").replace(/!\[[^\]]*\]\([^)]*\)/g, "").replace(/[>*_`~]/g, "").replace(/\s+/g, " ").trim()).find(Boolean) ?? title.trim();
       const parsedTags = tags.split(/[,，\n]/).map((tag) => tag.trim().replace(/^#/, "")).filter(Boolean).filter((tag, index, all) => all.indexOf(tag) === index).slice(0, 12);
-      await onSave({ ...editing, title: title.trim(), excerpt: generatedExcerpt.slice(0, 140), category, type, tags: parsedTags, markdown: body.trim(), content: body.trim().split(/\n\s*\n/).filter(Boolean) });
+      await onSave({ ...editing, title: title.trim(), excerpt: generatedExcerpt.slice(0, 140), category, type, tags: parsedTags, coverImage: coverImage?.trim() || null, markdown: body.trim(), content: body.trim().split(/\n\s*\n/).filter(Boolean) });
       setSaved(true); setEditing(null);
     } catch (saveError) { setError(saveError instanceof Error ? saveError.message : "保存失败，请稍后再试。"); }
     finally { setBusy(false); }
@@ -117,8 +125,20 @@ function AdminView({ posts, onSave, onDelete, onTogglePinned }: { posts: BlogPos
     } catch (uploadError) { setError(uploadError instanceof Error ? uploadError.message : "图片上传失败。"); }
     finally { setUploadingImage(false); }
   };
+  const uploadCover = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]; event.target.value = ""; if (!file) return;
+    setUploadingCover(true); setError("");
+    try {
+      const form = new FormData(); form.append("file", file);
+      const response = await fetch("/api/images", { method: "POST", body: form });
+      const result = await response.json() as { url?: string; error?: string };
+      if (!response.ok || !result.url) throw new Error(result.error || "封面上传失败。");
+      setCoverImage(result.url);
+    } catch (uploadError) { setError(uploadError instanceof Error ? uploadError.message : "封面上传失败。"); }
+    finally { setUploadingCover(false); }
+  };
   const deletePost = async (post: BlogPost) => { if (!window.confirm(`确定要删除《${post.title}》吗？`)) return; await onDelete(post); };
-  return <section className="page-view admin-view"><button type="button" className="admin-toolbar admin-create-bar" onClick={() => openEditor()} aria-label="新建文章"><Plus size={18} /><span>新建文章</span></button><div className="admin-list">{posts.map((post) => <div className="admin-row" key={post.id}><div className="admin-row-symbol">{post.type === "技术" ? "♠" : "🎀"}</div><div className="admin-row-copy"><span>{post.category} · {formatDate(post.date)}</span><strong>{post.title}</strong></div><div className="admin-row-status">{post.pinned && <span className="pin-badge">置顶</span>}<span className="published"><Check size={13} /> 已发布</span></div><div className="admin-row-actions"><button className="button button-quiet pin-action" onClick={() => onTogglePinned(post)}><Pin size={13} /> {post.pinned ? "取消置顶" : "置顶"}</button><button className="icon-button" onClick={() => openEditor(post)} aria-label={`编辑${post.title}`}><FilePenLine size={16} /></button><button className="icon-button danger-icon" onClick={() => deletePost(post)} aria-label={`删除${post.title}`}><Trash2 size={16} /></button></div></div>)}</div>{editing && <div className="editor-overlay"><div className="editor-modal"><div className="editor-header"><div><span className="section-kicker">{editing.title ? "EDIT ENTRY" : "NEW ENTRY"}</span><h2>{editing.title ? "编辑档案" : "写下新档案"}</h2></div><button className="icon-button" onClick={() => setEditing(null)} aria-label="关闭编辑器"><X size={19} /></button></div><label>标题<input value={title} onChange={(event) => setTitle(event.target.value)} placeholder="给这条记录一个标题" /></label><label>分类<select value={category} onChange={(event) => setCategory(event.target.value)}>{categories.map((item) => <option key={item.name}>{item.name}</option>)}</select></label><label>标签<input value={tags} onChange={(event) => setTags(event.target.value)} placeholder="用逗号分隔多个标签，例如：生活，随笔，记录" /></label><label>Markdown 正文<textarea className="body-input" value={body} onChange={(event) => setBody(event.target.value)} rows={12} placeholder={'# 标题\n\n写下正文，支持 **加粗**、列表、引用、代码块和图片。'} /></label><input ref={imageInputRef} type="file" accept="image/jpeg,image/png,image/webp,image/gif" hidden onChange={uploadImage} /><div className="upload-box"><UploadCloud size={20} /><div><strong>在正文中插入图片</strong><span>支持 JPG、PNG、WEBP、GIF，单张不超过 8MB</span></div><button className="button button-quiet" type="button" disabled={uploadingImage} onClick={() => imageInputRef.current?.click()}>{uploadingImage ? "上传中..." : "上传并插入"}</button></div>{error && <div className="form-error">{error}</div>}<div className="editor-footer"><div><button type="button" className="button button-quiet editor-cancel" onClick={() => setEditing(null)}><X size={15} />取消</button><button type="button" className="button button-primary editor-save" disabled={busy || uploadingImage} onClick={save}><Check size={15} />{busy ? "发布中..." : "保存并发布"}</button></div></div></div></div>}{saved && <div className="toast"><Check size={16} /> 文章已发布到博客</div>}</section>;
+  return <section className="page-view admin-view"><button type="button" className="admin-toolbar admin-create-bar" onClick={() => openEditor()} aria-label="新建文章"><Plus size={18} /><span>新建文章</span></button><div className="admin-list">{posts.map((post) => <div className="admin-row" key={post.id}><div className="admin-row-symbol">{post.type === "技术" ? "♠" : "🎀"}</div><div className="admin-row-copy"><span>{post.category} · {formatDate(post.date)}</span><strong>{post.title}</strong></div><div className="admin-row-status">{post.pinned && <span className="pin-badge">置顶</span>}<span className="published"><Check size={13} /> 已发布</span></div><div className="admin-row-actions"><button className="button button-quiet pin-action" onClick={() => onTogglePinned(post)}><Pin size={13} /> {post.pinned ? "取消置顶" : "置顶"}</button><button className="icon-button" onClick={() => openEditor(post)} aria-label={`编辑${post.title}`}><FilePenLine size={16} /></button><button className="icon-button danger-icon" onClick={() => deletePost(post)} aria-label={`删除${post.title}`}><Trash2 size={16} /></button></div></div>)}</div>{editing && <div className="editor-overlay"><div className="editor-modal"><div className="editor-header"><div><span className="section-kicker">{editing.title ? "EDIT ENTRY" : "NEW ENTRY"}</span><h2>{editing.title ? "编辑档案" : "写下新档案"}</h2></div><button className="icon-button" onClick={() => setEditing(null)} aria-label="关闭编辑器"><X size={19} /></button></div><label>标题<input value={title} onChange={(event) => setTitle(event.target.value)} placeholder="给这条记录一个标题" /></label><label>分类<select value={category} onChange={(event) => setCategory(event.target.value)}>{categories.map((item) => <option key={item.name}>{item.name}</option>)}</select></label><label>标签<input value={tags} onChange={(event) => setTags(event.target.value)} placeholder="用逗号分隔多个标签，例如：生活，随笔，记录" /></label><label>封面图片<input ref={coverInputRef} type="file" accept="image/jpeg,image/png,image/webp,image/gif" hidden onChange={uploadCover} /><div className="cover-picker">{coverImage ? <div className="cover-preview" style={{ backgroundImage: `url("${coverImage}")` }}><span>已选择封面</span><div><button type="button" className="button button-quiet" onClick={() => coverInputRef.current?.click()}><ImagePlus size={15} />更换</button><button type="button" className="button button-quiet" onClick={() => setCoverImage(null)}><X size={15} />移除</button></div></div> : <button type="button" className="cover-picker-empty" disabled={uploadingCover} onClick={() => coverInputRef.current?.click()}><ImagePlus size={20} /><span>{uploadingCover ? "上传中..." : "选择封面图片"}</span><small>发布后展示在首页文章卡片左侧</small></button>}</div></label><label>Markdown 正文<textarea className="body-input" value={body} onChange={(event) => setBody(event.target.value)} rows={12} placeholder={'# 标题\n\n写下正文，支持 **加粗**、列表、引用、代码块和图片。'} /></label><input ref={imageInputRef} type="file" accept="image/jpeg,image/png,image/webp,image/gif" hidden onChange={uploadImage} /><div className="upload-box"><UploadCloud size={20} /><div><strong>在正文中插入图片</strong><span>支持 JPG、PNG、WEBP、GIF，单张不超过 8MB</span></div><button className="button button-quiet" type="button" disabled={uploadingImage} onClick={() => imageInputRef.current?.click()}>{uploadingImage ? "上传中..." : "上传并插入"}</button></div>{error && <div className="form-error">{error}</div>}<div className="editor-footer"><div><button type="button" className="button button-quiet editor-cancel" onClick={() => setEditing(null)}><X size={15} />取消</button><button type="button" className="button button-primary editor-save" disabled={busy || uploadingImage || uploadingCover} onClick={save}><Check size={15} />{busy ? "发布中..." : "保存并发布"}</button></div></div></div></div>}{saved && <div className="toast"><Check size={16} /> 文章已发布到博客</div>}</section>;
 }
 
 export default function BlogApp({ initialView = "home", initialTheme = "magician", initialPosts = blogPosts }: { initialView?: View; initialTheme?: Theme; initialPosts?: BlogPost[] }) {

@@ -431,3 +431,24 @@
 .editor-save:focus-visible,.editor-cancel:focus-visible { outline:2px solid var(--accent); outline-offset:3px; }
 .pin-action { display:inline-flex; align-items:center; justify-content:center; gap:5px; line-height:1; }
 .pin-action svg { flex:0 0 auto; }
+.editor-cancel:hover:not(:disabled) { border-color:var(--accent); color:#fff; background:color-mix(in srgb,var(--accent) 86%,#fff); box-shadow:0 7px 16px color-mix(in srgb,var(--accent) 28%,transparent); transform:translateY(-1px); }
+.editor-save:hover:not(:disabled),
+.editor-cancel:hover:not(:disabled) { border-color:var(--accent); color:#fff; background:var(--accent); box-shadow:0 7px 16px color-mix(in srgb,var(--accent) 28%,transparent); transform:translateY(-1px); }
+
+/* User-selected article covers take over the left card artwork. */
+.post-thumb.has-cover { background-position:center; background-size:cover; }
+.post-thumb.has-cover::before { inset:0; width:auto; height:auto; border:0; background:linear-gradient(180deg,transparent 52%,rgb(4 15 35 / 38%)); transform:none; }
+.post-thumb.has-cover::after { display:none; }
+.post-thumb.has-cover .thumb-symbol { display:none; }
+.cover-picker { overflow:hidden; border:1px dashed var(--line-strong); border-radius:8px; background:var(--bg); }
+.cover-picker-empty { display:grid; grid-template-columns:auto 1fr; align-items:center; gap:4px 9px; width:100%; padding:14px; border:0; color:var(--accent); background:transparent; text-align:left; transition:color .2s ease,background .2s ease; }
+.cover-picker-empty:hover { color:var(--accent); background:var(--accent-soft); }
+.cover-picker-empty span { color:var(--text); font-size:12px; font-weight:600; }
+.cover-picker-empty small { grid-column:2; color:var(--muted); font-size:10px; }
+.cover-preview { position:relative; min-height:130px; padding:13px; display:flex; align-items:flex-end; justify-content:space-between; gap:12px; color:#fff; background-position:center; background-size:cover; }
+.cover-preview::before { position:absolute; inset:0; content:""; background:linear-gradient(180deg,transparent 35%,rgb(3 15 34 / 72%)); }
+.cover-preview > span,.cover-preview > div { position:relative; z-index:1; }
+.cover-preview > span { font-size:11px; font-weight:600; text-shadow:0 1px 4px rgb(0 0 0 / 45%); }
+.cover-preview > div { display:flex; gap:6px; }
+.cover-preview .button { display:inline-flex; align-items:center; gap:5px; padding:7px 9px; border:1px solid rgb(255 255 255 / 55%); border-radius:7px; color:#fff; background:rgb(5 23 47 / 48%); font-size:11px; }
+.cover-preview .button:hover { border-color:#fff; background:rgb(5 23 47 / 75%); }

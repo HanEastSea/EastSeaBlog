@@ -12,6 +12,7 @@ export const posts = sqliteTable("posts", {
   readTime: text("read_time").notNull().default("5 分钟"),
   pinned: integer("pinned", { mode: "boolean" }).notNull().default(false),
   tagsJson: text("tags_json").notNull().default("[]"),
+  coverImage: text("cover_image"),
   markdown: text("markdown").notNull().default(""),
   accent: text("accent").notNull().default("sapphire"),
   createdAt: text("created_at").notNull().default(sql`CURRENT_TIMESTAMP`),

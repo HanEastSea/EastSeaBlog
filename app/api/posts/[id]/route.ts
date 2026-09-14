@@ -16,6 +16,8 @@ export async function PATCH(request: Request, context: { params: Promise<{ id: s
   if (body?.type === "生活" || body?.type === "技术") updates.type = body.type;
   if (typeof body?.markdown === "string" && body.markdown.trim()) updates.markdown = body.markdown.trim();
   if (typeof body?.tagsJson === "string") updates.tagsJson = body.tagsJson;
+  if (typeof body?.coverImage === "string") updates.coverImage = body.coverImage.trim() || null;
+  if (body?.coverImage === null) updates.coverImage = null;
   const [updated] = await getDb().update(posts).set(updates).where(eq(posts.id, id)).returning();
   if (!updated) return Response.json({ error: "文章不存在。" }, { status: 404 });
   return Response.json({ post: rowToPost(updated) });

@@ -28,6 +28,7 @@ export async function POST(request: Request) {
   const markdown = typeof body?.markdown === "string" ? body.markdown.trim() : "";
   if (!title || !markdown) return Response.json({ error: "标题和 Markdown 正文不能为空。" }, { status: 400 });
   const tags = Array.isArray(body?.tags) ? body.tags.filter((tag): tag is string => typeof tag === "string") : [];
+  const coverImage = typeof body?.coverImage === "string" && body.coverImage.trim() ? body.coverImage.trim() : null;
   const post = {
     id: `case-${crypto.randomUUID()}`,
     slug: slugify(title),
@@ -39,6 +40,7 @@ export async function POST(request: Request) {
     readTime: estimateReadTime(markdown),
     pinned: false,
     tagsJson: JSON.stringify(tags),
+    coverImage,
     markdown,
     accent: body?.accent === "crimson" || body?.accent === "silver" ? body.accent : "sapphire",
   };

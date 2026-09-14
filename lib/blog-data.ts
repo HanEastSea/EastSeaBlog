@@ -11,6 +11,7 @@ export type BlogPost = {
   readTime: string;
   pinned?: boolean;
   tags: string[];
+  coverImage?: string | null;
   content: string[];
   markdown?: string;
   accent: "crimson" | "sapphire" | "silver";
