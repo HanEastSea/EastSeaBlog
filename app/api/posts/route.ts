@@ -2,10 +2,7 @@ import { isBlogOwner } from "@/app/blog-access";
 import { posts } from "@/db/schema";
 import { getDb } from "@/db";
 import { getStoredPosts, rowToPost } from "@/lib/posts-server";
-
-function makeExcerpt(markdown: string) {
-  return markdown.replace(/!\[[^\]]*\]\([^)]*\)/g, "").replace(/[#>*_`~-]/g, "").replace(/\s+/g, " ").trim().slice(0, 110) || "一条新的现场记录。";
-}
+import { makeSmartExcerpt } from "@/lib/excerpt";
 
 function estimateReadTime(markdown: string) {
   const chars = markdown.replace(/\s/g, "").length;
@@ -33,7 +30,7 @@ export async function POST(request: Request) {
     id: `case-${crypto.randomUUID()}`,
     slug: slugify(title),
     title,
-    excerpt: typeof body?.excerpt === "string" && body.excerpt.trim() ? body.excerpt.trim() : makeExcerpt(markdown),
+    excerpt: typeof body?.excerpt === "string" && body.excerpt.trim() ? body.excerpt.trim() : makeSmartExcerpt(markdown, title),
     category: typeof body?.category === "string" ? body.category : "日常生活",
     type: body?.type === "技术" ? "技术" : "生活",
     date: new Date().toISOString().slice(0, 10),

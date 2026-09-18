@@ -9,6 +9,7 @@ import {
   ImagePlus, Menu, Plus, Search, Sparkles, UploadCloud, X, Pin, Trash2,
 } from "lucide-react";
 import { BlogPost, blogPosts, categories, formatDate, formatShortDate } from "@/lib/blog-data";
+import { makeSmartExcerpt } from "@/lib/excerpt";
 import { renderMarkdown } from "@/lib/markdown";
 
 type Theme = "detective" | "magician";
@@ -35,7 +36,8 @@ function SiteHeader({ theme, onToggle, menuOpen, onMenu, searchQuery, onSearchCh
 function PostCard({ post, featured = false, onOpen }: { post: BlogPost; featured?: boolean; onOpen?: (post: BlogPost) => void }) {
   const thumbClass = `post-thumb ${featured ? "has-hero" : ""} ${post.coverImage ? "has-cover" : ""}`;
   const thumbStyle = post.coverImage ? { backgroundImage: `url("${post.coverImage}")` } : featured ? { backgroundImage: "url('/hero-archive.png')" } : undefined;
-  return <article className={`post-card ${featured ? "post-card-featured" : ""} accent-${post.accent}`}><div className={thumbClass} style={thumbStyle}><span className="thumb-case">CASE {post.id.replace("case-", "")}</span><span className="thumb-symbol">{post.type === "技术" ? "♠" : post.pinned ? "🎀" : "✦"}</span><span className="thumb-stamp">{post.pinned ? "置顶" : post.type}</span></div><div className="post-card-content"><div className="post-card-topline"><span className="eyebrow"><span className="eyebrow-dot" />{post.category}</span>{post.pinned && <span className="pin-badge">置顶档案</span>}</div><h3>{post.title}</h3><p>{post.excerpt}</p><div className="tag-list">{post.tags.slice(0, 4).map((tag) => <span key={tag}>#{tag}</span>)}</div><div className="post-card-footer"><div className="post-meta"><span><Clock3 size={13} /> {formatShortDate(post.date)}</span><span><span className="mini-eye">◉</span> {post.readTime}</span></div><button className="read-more" onClick={() => onOpen?.(post)}>阅读全文 <ArrowUpRight size={15} /></button></div></div></article>;
+  const summary = makeSmartExcerpt(post.markdown ?? post.content.join("\n\n"), post.title, post.excerpt);
+  return <article className={`post-card ${featured ? "post-card-featured" : ""} accent-${post.accent}`}><div className={thumbClass} style={thumbStyle}><span className="thumb-case">CASE {post.id.replace("case-", "")}</span><span className="thumb-symbol">{post.type === "技术" ? "♠" : post.pinned ? "🎀" : "✦"}</span><span className="thumb-stamp">{post.pinned ? "置顶" : post.type}</span></div><div className="post-card-content"><div className="post-card-topline"><span className="eyebrow"><span className="eyebrow-dot" />{post.category}</span>{post.pinned && <span className="pin-badge">置顶档案</span>}</div><h3>{post.title}</h3><p>{summary}</p><div className="tag-list">{post.tags.slice(0, 4).map((tag) => <span key={tag}>#{tag}</span>)}</div><div className="post-card-footer"><div className="post-meta"><span><Clock3 size={13} /> {formatShortDate(post.date)}</span><span><span className="mini-eye">◉</span> {post.readTime}</span></div><button className="read-more" onClick={() => onOpen?.(post)}>阅读全文 <ArrowUpRight size={15} /></button></div></div></article>;
 }
 
 function MiniCalendar({ posts, onOpen }: { posts: BlogPost[]; onOpen: (post: BlogPost) => void }) {
@@ -80,7 +82,7 @@ function CalendarView({ posts, onOpen }: { posts: BlogPost[]; onOpen: (post: Blo
 
 function ArticleView({ post, onBack, theme }: { post: BlogPost; onBack: () => void; theme: Theme }) {
   const markdown = post.markdown ?? post.content.join("\n\n");
-  return <section className="article-view"><button className="back-link" onClick={onBack}><ArrowLeft size={16} /> 返回文章列表</button><div className="article-header"><span className="section-kicker">CASE {post.id.replace("case-", "")} / {post.type.toUpperCase()}</span><h1>{post.title}</h1><p>{post.excerpt}</p><div className="article-meta"><span className="article-author">东海 · 作者</span><span className="meta-divider" /><span className="article-date">{formatDate(post.date)}</span><span className="meta-divider" /><span className="article-reading"><Clock3 size={14} /> {post.readTime}</span></div></div><div className="article-body markdown-body" dangerouslySetInnerHTML={{ __html: renderMarkdown(markdown) }} /><div className="article-tags">{post.tags.map((tag) => <span key={tag}>#{tag}</span>)}</div><button className="article-top-button" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} aria-label="返回顶部" title="返回顶部"><span>{theme === "magician" ? "♠" : "🎀"}</span></button></section>;
+  return <section className="article-view"><button className="back-link" onClick={onBack}><ArrowLeft size={16} /> 返回文章列表</button><div className="article-header"><span className="section-kicker">CASE {post.id.replace("case-", "")} / {post.type.toUpperCase()}</span><h1>{post.title}</h1><div className="article-meta"><span className="article-author">东海 · 作者</span><span className="meta-divider" /><span className="article-date">{formatDate(post.date)}</span><span className="meta-divider" /><span className="article-reading"><Clock3 size={14} /> {post.readTime}</span></div></div><div className="article-body markdown-body" dangerouslySetInnerHTML={{ __html: renderMarkdown(markdown) }} /><div className="article-tags">{post.tags.map((tag) => <span key={tag}>#{tag}</span>)}</div><button className="article-top-button" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} aria-label="返回顶部" title="返回顶部"><span>{theme === "magician" ? "♠" : "🎀"}</span></button></section>;
 }
 
 function AdminView({ posts, onSave, onDelete, onTogglePinned }: { posts: BlogPost[]; onSave: (post: BlogPost) => Promise<void>; onDelete: (post: BlogPost) => Promise<void>; onTogglePinned: (post: BlogPost) => Promise<void> }) {
@@ -106,7 +108,7 @@ function AdminView({ posts, onSave, onDelete, onTogglePinned }: { posts: BlogPos
     if (!title.trim() || !body.trim() || !editing) { setError("标题和 Markdown 正文不能为空。"); return; }
     setBusy(true); setError("");
     try {
-      const generatedExcerpt = body.trim().split(/\n\s*\n/).map((block) => block.replace(/^#{1,6}\s+/gm, "").replace(/!\[[^\]]*\]\([^)]*\)/g, "").replace(/[>*_`~]/g, "").replace(/\s+/g, " ").trim()).find(Boolean) ?? title.trim();
+      const generatedExcerpt = makeSmartExcerpt(body.trim(), title.trim(), title.trim());
       const parsedTags = tags.split(/[,，\n]/).map((tag) => tag.trim().replace(/^#/, "")).filter(Boolean).filter((tag, index, all) => all.indexOf(tag) === index).slice(0, 12);
       await onSave({ ...editing, title: title.trim(), excerpt: generatedExcerpt.slice(0, 140), category, type, tags: parsedTags, coverImage: coverImage?.trim() || null, markdown: body.trim(), content: body.trim().split(/\n\s*\n/).filter(Boolean) });
       setSaved(true); setEditing(null);

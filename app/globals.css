@@ -382,7 +382,7 @@
 .article-meta > span { display:inline-flex; align-items:center; }
 .article-meta .article-author { margin-left:0; }
 .article-meta .article-reading svg { flex:0 0 auto; }
-.article-meta { margin-top:13px; margin-bottom:12px; }
+.article-meta { margin-top:15px; margin-bottom:12px; font-size:15px; }
 .article-view .back-link { gap:8px; font-size:15px; font-weight:600; }
 .article-view .back-link svg { width:20px; height:20px; stroke-width:2.4; }
 :root[data-theme="magician"] .article-view .article-header > p { color:#385572; text-shadow:0 1px 2px rgb(255 255 255 / 78%); }
