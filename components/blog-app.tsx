@@ -64,10 +64,10 @@ function SearchEmptyState({ theme }: { theme: Theme }) {
 }
 
 function HomeView({ posts, onOpen, searchQuery, theme }: { posts: BlogPost[]; onOpen: (post: BlogPost) => void; searchQuery: string; theme: Theme }) {
-  const featured = posts.find((post) => post.pinned) ?? posts[0];
+  const featured = posts.find((post) => post.pinned);
   const normalizedQuery = searchQuery.trim().toLowerCase();
   const matchingPosts = normalizedQuery ? posts.filter((post) => `${post.title} ${post.excerpt} ${post.category} ${post.type} ${post.tags.join(" ")}`.toLowerCase().includes(normalizedQuery)) : posts;
-  return <div className="home-content-grid"><main className="home-feed"><div className="feed-title"><div><h2>{normalizedQuery ? "搜索结果" : "置顶文章"}</h2>{normalizedQuery && <p className="search-summary">找到 {matchingPosts.length} 篇相关档案</p>}</div></div>{normalizedQuery ? matchingPosts.map((post) => <PostCard key={post.id} post={post} onOpen={onOpen} />) : <>{featured && <PostCard post={featured} featured onOpen={onOpen} />}<div className="feed-label"><span>最新文章</span><span>{posts.length.toString().padStart(2, "0")} ENTRIES</span></div>{posts.filter((post) => post.id !== featured?.id).map((post) => <PostCard key={post.id} post={post} onOpen={onOpen} />)}</>}{normalizedQuery && !matchingPosts.length && <SearchEmptyState theme={theme} />}</main><Sidebar posts={posts} onOpen={onOpen} /></div>;
+  return <div className="home-content-grid"><main className="home-feed"><div className="feed-title"><div><h2>{normalizedQuery ? "搜索结果" : "置顶文章"}</h2>{normalizedQuery && <p className="search-summary">找到 {matchingPosts.length} 篇相关档案</p>}</div></div>{normalizedQuery ? matchingPosts.map((post) => <PostCard key={post.id} post={post} onOpen={onOpen} />) : <>{featured ? <PostCard post={featured} featured onOpen={onOpen} /> : <div className="empty-state pinned-empty"><strong>暂无置顶文章</strong><span>在后台管理中设置置顶后，会显示在这里。</span></div>}<div className="feed-label"><span>最新文章</span><span>{posts.length.toString().padStart(2, "0")} ENTRIES</span></div>{posts.filter((post) => post.id !== featured?.id).map((post) => <PostCard key={post.id} post={post} onOpen={onOpen} />)}</>}{normalizedQuery && !matchingPosts.length && <SearchEmptyState theme={theme} />}</main><Sidebar posts={posts} onOpen={onOpen} /></div>;
 }
 
 function CategoriesView({ posts, onOpen }: { posts: BlogPost[]; onOpen: (post: BlogPost) => void }) {
