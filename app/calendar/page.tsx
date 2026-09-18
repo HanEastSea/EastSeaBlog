@@ -1,7 +1,10 @@
 import BlogApp from "@/components/blog-app";
+import { isBlogOwner } from "@/app/blog-access";
 import { getStoredPosts } from "@/lib/posts-server";
 import { getInitialTheme } from "@/lib/theme";
 
+export const dynamic = "force-dynamic";
+
 export default async function CalendarPage() {
-  return <BlogApp initialView="calendar" initialTheme={await getInitialTheme()} initialPosts={await getStoredPosts()} />;
+  return <BlogApp initialView="calendar" initialTheme={await getInitialTheme()} initialPosts={await getStoredPosts()} canManage={await isBlogOwner()} />;
 }

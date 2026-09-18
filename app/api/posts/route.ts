@@ -1,4 +1,4 @@
-import { getChatGPTUser } from "@/app/chatgpt-auth";
+import { isBlogOwner } from "@/app/blog-access";
 import { posts } from "@/db/schema";
 import { getDb } from "@/db";
 import { getStoredPosts, rowToPost } from "@/lib/posts-server";
@@ -22,7 +22,7 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  if (!(await getChatGPTUser())) return Response.json({ error: "请先登录后再发布文章。" }, { status: 401 });
+  if (!(await isBlogOwner())) return Response.json({ error: "只有站点所有者可以发布文章。" }, { status: 403 });
   const body = await request.json().catch(() => null) as Record<string, unknown> | null;
   const title = typeof body?.title === "string" ? body.title.trim() : "";
   const markdown = typeof body?.markdown === "string" ? body.markdown.trim() : "";

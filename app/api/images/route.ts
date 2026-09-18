@@ -1,11 +1,11 @@
 import { env } from "cloudflare:workers";
-import { getChatGPTUser } from "@/app/chatgpt-auth";
+import { isBlogOwner } from "@/app/blog-access";
 
 const allowedTypes = new Set(["image/jpeg", "image/png", "image/webp", "image/gif"]);
 const maxBytes = 8 * 1024 * 1024;
 
 export async function POST(request: Request) {
-  if (!(await getChatGPTUser())) return Response.json({ error: "请先登录后再上传图片。" }, { status: 401 });
+  if (!(await isBlogOwner())) return Response.json({ error: "只有站点所有者可以上传图片。" }, { status: 403 });
   if (!env.BUCKET) return Response.json({ error: "图片存储尚未配置，请稍后再试。" }, { status: 503 });
   const form = await request.formData();
   const file = form.get("file");

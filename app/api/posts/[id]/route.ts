@@ -1,11 +1,11 @@
 import { eq } from "drizzle-orm";
-import { getChatGPTUser } from "@/app/chatgpt-auth";
+import { isBlogOwner } from "@/app/blog-access";
 import { posts } from "@/db/schema";
 import { getDb } from "@/db";
 import { rowToPost } from "@/lib/posts-server";
 
 export async function PATCH(request: Request, context: { params: Promise<{ id: string }> }) {
-  if (!(await getChatGPTUser())) return Response.json({ error: "请先登录后再修改文章。" }, { status: 401 });
+  if (!(await isBlogOwner())) return Response.json({ error: "只有站点所有者可以修改文章。" }, { status: 403 });
   const { id } = await context.params;
   const body = await request.json().catch(() => null) as Record<string, unknown> | null;
   const updates: Partial<typeof posts.$inferInsert> = { updatedAt: new Date().toISOString() };
@@ -24,7 +24,7 @@ export async function PATCH(request: Request, context: { params: Promise<{ id: s
 }
 
 export async function DELETE(_request: Request, context: { params: Promise<{ id: string }> }) {
-  if (!(await getChatGPTUser())) return Response.json({ error: "请先登录后再删除文章。" }, { status: 401 });
+  if (!(await isBlogOwner())) return Response.json({ error: "只有站点所有者可以删除文章。" }, { status: 403 });
   const { id } = await context.params;
   const deleted = await getDb().delete(posts).where(eq(posts.id, id)).returning({ id: posts.id });
   if (!deleted.length) return Response.json({ error: "文章不存在。" }, { status: 404 });
