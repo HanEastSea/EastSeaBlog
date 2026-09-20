@@ -23,7 +23,6 @@ export function rowToPost(row: typeof posts.$inferSelect): BlogPost {
     type: row.type === "技术" ? "技术" : "生活",
     date: row.date,
     readTime: row.readTime,
-    pinned: Boolean(row.pinned),
     tags: parseTags(row.tagsJson),
     coverImage: row.coverImage || null,
     markdown,
@@ -43,7 +42,6 @@ function postToInsert(post: BlogPost) {
     type: post.type,
     date: post.date,
     readTime: post.readTime,
-    pinned: Boolean(post.pinned),
     tagsJson: JSON.stringify(post.tags),
     coverImage: post.coverImage ?? null,
     markdown,
@@ -63,7 +61,7 @@ async function seedDemoPosts() {
 export async function getStoredPosts() {
   try {
     await seedDemoPosts();
-    const rows = await getDb().select().from(posts).orderBy(desc(posts.pinned), desc(posts.date));
+    const rows = await getDb().select().from(posts).orderBy(desc(posts.date));
     return rows.map(rowToPost);
   } catch (error) {
     console.error("Unable to load posts from D1", error);

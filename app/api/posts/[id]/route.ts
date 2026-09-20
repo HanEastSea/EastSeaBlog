@@ -9,7 +9,6 @@ export async function PATCH(request: Request, context: { params: Promise<{ id: s
   const { id } = await context.params;
   const body = await request.json().catch(() => null) as Record<string, unknown> | null;
   const updates: Partial<typeof posts.$inferInsert> = { updatedAt: new Date().toISOString() };
-  if (typeof body?.pinned === "boolean") updates.pinned = body.pinned;
   if (typeof body?.title === "string" && body.title.trim()) updates.title = body.title.trim();
   if (typeof body?.excerpt === "string") updates.excerpt = body.excerpt.trim();
   if (typeof body?.category === "string") updates.category = body.category;

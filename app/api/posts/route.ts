@@ -35,7 +35,6 @@ export async function POST(request: Request) {
     type: body?.type === "技术" ? "技术" : "生活",
     date: new Date().toISOString().slice(0, 10),
     readTime: estimateReadTime(markdown),
-    pinned: false,
     tagsJson: JSON.stringify(tags),
     coverImage,
     markdown,

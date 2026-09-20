@@ -9,7 +9,6 @@ export type BlogPost = {
   type: PostType;
   date: string;
   readTime: string;
-  pinned?: boolean;
   tags: string[];
   coverImage?: string | null;
   content: string[];
@@ -27,7 +26,6 @@ export const blogPosts: BlogPost[] = [
     type: "生活",
     date: "2026-09-10",
     readTime: "4 分钟",
-    pinned: true,
     tags: ["日常", "随笔", "慢生活"],
     accent: "crimson",
     content: [
